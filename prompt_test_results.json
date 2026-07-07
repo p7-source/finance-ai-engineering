@@ -1,0 +1,80 @@
+[
+  {
+    "v1": {
+      "version": "v1",
+      "description": "Basic prompt \u2014 no structure",
+      "output": "# Email Summary\n\n**Meeting:** Budget meeting rescheduled to **Monday at 2pm**\n\n**Agenda:** Q4 financial numbers presentation by CFO\n\n**Required attendees:** All department heads\n\n**What to bring:** Expense reports",
+      "tokens": 106,
+      "latency": 1.72,
+      "cost": 1.3e-05
+    },
+    "v2": {
+      "version": "v2",
+      "description": "Structured prompt \u2014 with format instructions",
+      "output": "SUMMARY: The budget meeting has been rescheduled to Monday at 2pm, where the CFO will present Q4 numbers and all department heads must attend with their expense reports.\n\nACTIONS:\n\u2022 Attend budget meeting Monday at 2pm\n\u2022 Prepare and bring expense reports\n\u2022 Review Q4 budget expectations in advance\n\nPRIORITY: High",
+      "tokens": 177,
+      "latency": 1.19,
+      "cost": 2.4e-05
+    },
+    "v3": {
+      "version": "v3",
+      "description": "Advanced prompt \u2014 with examples (few-shot)",
+      "output": "SUMMARY: Budget meeting rescheduled to Monday at 2pm where the CFO will present Q4 numbers. All department heads are required to attend and bring their expense reports.\n\nACTIONS:\n- Attend budget meeting Monday at 2pm\n- Bring expense reports to meeting\n- Review Q4 numbers (presented by CFO)\n\nPRIORITY: High",
+      "tokens": 220,
+      "latency": 1.03,
+      "cost": 3.4e-05
+    }
+  },
+  {
+    "v1": {
+      "version": "v1",
+      "description": "Basic prompt \u2014 no structure",
+      "output": "# Email Summary\n\n**Subject:** Compliance training deadline reminder\n\n**Key Point:** Employees must complete their compliance training by the end of the month or face system access suspension.\n\n**Action Required:** Complete compliance training before the deadline to avoid account lockout.",
+      "tokens": 88,
+      "latency": 1.33,
+      "cost": 8e-06
+    },
+    "v2": {
+      "version": "v2",
+      "description": "Structured prompt \u2014 with format instructions",
+      "output": "SUMMARY: Compliance training must be completed by month-end to avoid system access suspension.\n\nACTIONS:\n\u2022 Complete required compliance training before end of month\n\u2022 Verify system access status after training completion\n\nPRIORITY: High",
+      "tokens": 129,
+      "latency": 1.17,
+      "cost": 1.9e-05
+    },
+    "v3": {
+      "version": "v3",
+      "description": "Advanced prompt \u2014 with examples (few-shot)",
+      "output": "SUMMARY: Compliance training must be completed by end of month or system access will be suspended.\n\nACTIONS:\n- Complete compliance training by end of month\n- Ensure system access is not suspended\n\nPRIORITY: High",
+      "tokens": 169,
+      "latency": 1.49,
+      "cost": 3e-05
+    }
+  },
+  {
+    "v1": {
+      "version": "v1",
+      "description": "Basic prompt \u2014 no structure",
+      "output": "# Summary\n\nThe London office will be closed next week for renovations. Employees should direct urgent matters to the New York team during this time.",
+      "tokens": 72,
+      "latency": 0.92,
+      "cost": 1e-05
+    },
+    "v2": {
+      "version": "v2",
+      "description": "Structured prompt \u2014 with format instructions",
+      "output": "SUMMARY: The London office will be closed next week for renovations, requiring urgent matters to be coordinated with the NY team.\n\nACTIONS:\n\u2022 Coordinate with NY team for any urgent matters during London office closure\n\u2022 Notify relevant staff of London office closure dates\n\nPRIORITY: Medium",
+      "tokens": 150,
+      "latency": 1.12,
+      "cost": 2.1e-05
+    },
+    "v3": {
+      "version": "v3",
+      "description": "Advanced prompt \u2014 with examples (few-shot)",
+      "output": "SUMMARY: The London office will be closed next week for renovations. Staff should coordinate with the NY team for any urgent matters during this period.\n\nACTIONS:\n- Coordinate with NY team for urgent matters next week\n- Plan for London office closure during renovation\n\nPRIORITY: Medium",
+      "tokens": 189,
+      "latency": 1.23,
+      "cost": 3.1e-05
+    }
+  }
+]
