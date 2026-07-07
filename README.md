@@ -1,22 +1,99 @@
+
 # Finance AI Engineer Portfolio
 
-Production-grade AI engineering projects built for financial services use cases.
+Production-grade AI engineering projects for financial services.
+
+Built to demonstrate Senior AI Engineer capabilities.
+
+## Architecture
+
+## Architecture
+
+```
+
+User Query
+
+     ↓
+
+Classifier Agent (LangGraph)
+
+     ↓
+
+     ├── Compliance → RAG Agent (ChromaDB + Claude)
+
+     ├── Email      → Summarization Agent (Claude Haiku)
+
+     └── General    → LLM Router (Haiku vs Sonnet)
+
+     ↓
+
+LangSmith Monitoring
+
+     ↓
+
+Response + Cost + Latency
+
+```
+
+
+
+
 
 ## Projects
 
-### Email Intelligence Pipeline
-Multi-agent LangGraph workflow for email summarization and action extraction.
-- Supervisor + worker agent architecture
-- Conditional routing (simple vs complex emails)
-- Shared state management across agents
-- Built with LangChain Anthropic + LangGraph
+| File | Description | Tech |
 
-**Stack:** Python, LangGraph, LangChain, Claude Haiku
+|------|-------------|------|
+
+| finance_ai_system.py | Full integrated system | LangGraph + RAG + LLM Router |
+
+| email_intelligence_pipeline.py | Multi-agent email processing | LangGraph + Claude |
+
+| llm_router.py | Dynamic model selection | Claude Haiku + Sonnet |
+
+| rag_pipeline.py | Regulatory document Q&A | ChromaDB + LlamaIndex |
+
+| api_service.py | Production API | FastAPI + Async Python |
+
+| prompt_engineer.py | A/B testing prompts | LangSmith + Claude |
+
+| monitoring.py | Observability | LangSmith tracing |
+
+## Stack
+
+- **LLMs:** Claude Haiku, Claude Sonnet (Anthropic)
+
+- **Orchestration:** LangGraph, LangChain
+
+- **Vector DB:** ChromaDB
+
+- **API:** FastAPI, Uvicorn
+
+- **Monitoring:** LangSmith
+
+- **Container:** Docker
+
+- **Language:** Python 3.9
 
 ## Setup
+
 ```bash
+
 python3 -m venv venv
+
 source venv/bin/activate
+
 pip3 install -r requirements.txt
-python3 email_intelligence_pipeline.py
+
+python3 finance_ai_system.py
+
 ```
+
+## Yahoo Context
+
+Built on patterns from Yahoo Mail Intelligence —
+
+5,000 QPS LLM serving with Qwen 1.7B, vLLM,
+
+multi-agent orchestration, and LoRA fine-tuning.
+
