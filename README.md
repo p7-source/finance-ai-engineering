@@ -97,3 +97,18 @@ Built on patterns from Yahoo Mail Intelligence —
 
 multi-agent orchestration, and LoRA fine-tuning.
 
+
+## Live Demo
+
+API deployed on GKE — Google Kubernetes Engine
+
+**Base URL:** http://34.9.87.94
+
+Test it:
+```bash
+curl http://34.9.87.94/health
+
+curl -X POST http://34.9.87.94/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What is Basel III capital ratio?"}'
+```
