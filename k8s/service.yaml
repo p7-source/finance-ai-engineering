@@ -1,0 +1,16 @@
+# service.yaml
+# Exposes your Finance AI API to the internet
+# LoadBalancer = GCP creates external IP automatically
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: finance-ai-service
+spec:
+  selector:
+    app: finance-ai-api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+  type: LoadBalancer
