@@ -1,0 +1,50 @@
+{
+  "summary": {
+    "faithfulness": 0.99,
+    "answer_relevancy": 0.85,
+    "context_precision": 0.66,
+    "overall": 0.83
+  },
+  "detailed_results": [
+    {
+      "question": "What is the minimum capital ratio required by Basel III?",
+      "answer": "According to the context, Basel III requires banks to maintain a minimum Common Equity Tier 1 ratio of 4.5%, with a capital conservation buffer of 2.5%, bringing the total to 7%.",
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.85,
+      "context_precision": 0.75,
+      "avg_score": 0.87
+    },
+    {
+      "question": "What are KYC requirements for opening a bank account?",
+      "answer": "According to the context, KYC regulations require financial institutions to verify customer identity before opening accounts. The documents required include:\n\n1. Government ID\n2. Proof of address",
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.85,
+      "context_precision": 0.6,
+      "avg_score": 0.82
+    },
+    {
+      "question": "How should suspicious transactions be reported?",
+      "answer": "According to the context, suspicious transactions above $10,000 should be reported to FinCEN within 30 days via a Suspicious Activity Report.",
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.85,
+      "context_precision": 0.85,
+      "avg_score": 0.9
+    },
+    {
+      "question": "What does the Volcker Rule prohibit?",
+      "answer": "According to the context provided, the Volcker Rule prohibits banks from proprietary trading and limits investments in hedge funds to 3% of Tier 1 capital.",
+      "faithfulness": 1.0,
+      "answer_relevancy": 0.85,
+      "context_precision": 0.5,
+      "avg_score": 0.78
+    },
+    {
+      "question": "What is the GDPR right to erasure?",
+      "answer": "According to the context, the GDPR right to erasure (Article 17) gives individuals the right to have their personal data deleted. Organizations must delete personal data upon request within 30 days.",
+      "faithfulness": 0.95,
+      "answer_relevancy": 0.85,
+      "context_precision": 0.6,
+      "avg_score": 0.8
+    }
+  ]
+}
