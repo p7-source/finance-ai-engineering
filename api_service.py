@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from anthropic import AsyncAnthropic
 from dotenv import load_dotenv
+from collections import deque
 
 load_dotenv()
 
@@ -22,6 +23,64 @@ app = FastAPI(
     description="LLM routing + RAG for financial services",
     version="1.0.0"
 )
+
+# ============================================================
+# CLOSED LOOP CONCURRENCY CONTROL
+# Yahoo context: telemetry-driven autoscaling
+# ============================================================
+
+MAX_CONCURRENT = 5
+semaphore = asyncio.Semaphore(MAX_CONCURRENT)
+request_times = deque(maxlen=100)
+queue_depth = 0
+
+def get_p99_latency():
+
+    now = time.time()
+    # Only look at last 30 seconds
+    recent = [t for ts, t in request_times if now - ts < 30]
+    
+    if len(recent) < 5:
+        return 0
+    sorted_times = sorted(recent)
+    return sorted_times[int(len(sorted_times) * 0.99)]
+    # if len(request_times) < 10:
+    #     return 0
+    # sorted_times = sorted(request_times)
+    # return sorted_times[int(len(sorted_times) * 0.99)]
+
+async def closed_loop_controller():
+    global semaphore, MAX_CONCURRENT
+    while True:
+        await asyncio.sleep(3)
+        p99 = get_p99_latency()
+        current = MAX_CONCURRENT
+
+        if p99 > 5.0:
+            MAX_CONCURRENT = max(1, MAX_CONCURRENT - 2)
+            semaphore = asyncio.Semaphore(MAX_CONCURRENT)
+            print(f"⬇️  Decreasing: {current} → {MAX_CONCURRENT} (p99={p99:.2f}s)")
+
+        elif p99 < 2.0 and MAX_CONCURRENT < 20:
+            MAX_CONCURRENT = MAX_CONCURRENT + 2
+            semaphore = asyncio.Semaphore(MAX_CONCURRENT)
+            print(f"⬆️  Increasing: {current} → {MAX_CONCURRENT} (p99={p99:.2f}s)")
+
+        else:
+            print(f"✅ Stable: MAX_CONCURRENT={MAX_CONCURRENT} p99={p99:.2f}s")
+
+@app.on_event("startup")
+async def startup():
+    asyncio.create_task(closed_loop_controller())
+
+@app.get("/metrics")
+async def metrics():
+    return {
+        "max_concurrent": MAX_CONCURRENT,
+        "p99_latency_sec": get_p99_latency(),
+        "queue_depth": queue_depth,
+        "requests_tracked": len(request_times)
+    }
 
 # ChromaDB setup
 chroma_client = chromadb.Client()
@@ -76,38 +135,46 @@ async def health():
 
 @app.post("/query", response_model=QueryResponse)
 async def query_endpoint(request: QueryRequest):
-    start = time.time()
-    model = select_model(request.question)
+    global queue_depth
+    queue_depth += 1
+    
+    async with semaphore:
+        queue_depth -= 1
+        start = time.time()
 
-    # Retrieve from RAG
-    results = collection.query(
-        query_texts=[request.question],
-        n_results=2
-    )
-    context = "\n\n".join(results["documents"][0])
-    sources = [m["source"] for m in results["metadatas"][0]]
+        model = select_model(request.question)
 
-    # Async LLM call
-    response = await client.messages.create(
-        model=model,
-        max_tokens=300,
-        messages=[{
-            "role": "user",
-            "content": f"Answer using this context only:\n{context}\n\nQuestion: {request.question}"
-        }]
-    )
+        # Retrieve from RAG
+        results = collection.query(
+            query_texts=[request.question],
+            n_results=2
+        )
+        context = "\n\n".join(results["documents"][0])
+        sources = [m["source"] for m in results["metadatas"][0]]
 
-    latency = round(time.time() - start, 2)
-    tokens = response.usage.input_tokens
-    cost = round((tokens / 1000) * MODEL_COSTS[model], 6)
+        # Async LLM call
+        response = await client.messages.create(
+            model=model,
+            max_tokens=300,
+            messages=[{
+                "role": "user",
+                "content": f"Answer using this context only:\n{context}\n\nQuestion: {request.question}"
+            }]
+        )
 
-    return QueryResponse(
-        answer=response.content[0].text,
-        model_used=model,
-        latency_sec=latency,
-        cost_usd=cost,
-        sources=sources
-    )
+        latency = round(time.time() - start, 2)
+        # request_times.append(latency)
+        request_times.append((time.time(), latency))
+        tokens = response.usage.input_tokens
+        cost = round((tokens / 1000) * MODEL_COSTS[model], 6)
+
+        return QueryResponse(
+            answer=response.content[0].text,
+            model_used=model,
+            latency_sec=latency,
+            cost_usd=cost,
+            sources=sources
+        )
 
 @app.post("/summarize", response_model=QueryResponse)
 async def summarize_endpoint(request: EmailRequest):
