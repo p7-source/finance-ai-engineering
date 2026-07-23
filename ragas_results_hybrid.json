@@ -1,0 +1,14 @@
+{
+  "summary": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.78,
+    "context_precision": 0.66,
+    "overall": 0.81
+  },
+  "vs_baseline": {
+    "faithfulness": 0.99,
+    "answer_relevancy": 0.85,
+    "context_precision": 0.66,
+    "overall": 0.83
+  }
+}
